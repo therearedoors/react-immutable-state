@@ -16,18 +16,26 @@ function App() {
     
   }
 
-  const deleteWorkout = (workout) => {
-    setWorkouts(workouts.filter(e => e !== workout))
+  const deleteWorkout = (targetWorkout) => {
+    setWorkouts(workouts.filter(workout => workout !== targetWorkout))
     if (checked) {
-      setDone(done.filter(e => e !== workout))
-      setWorkouts(done)
+      const updateDone = done.filter(workout => workout !== targetWorkout)
+      const updateMemo = memo.filter(workout => workout !== targetWorkout)
+      setMemo(updateMemo)
+      setDone(updateDone)
+      setWorkouts(updateDone)
     }
   }
 
   const completeWorkout = (targetWorkout) => {
-    const update = workouts.map(workout => workout == targetWorkout ? {...workout, done: !workout.done} : workout)
+    const update = workouts.map(workout => workout === targetWorkout ? {...workout, done: !workout.done} : workout)
     setWorkouts(update)
-    setDone(update.filter(w => w.done === true))
+    setDone(update.filter(workout => workout.done === true))
+  }
+
+  const randomiseWorkout = (targetWorkout) => {
+    const newWorkout = generateWorkout()
+    setWorkouts(workouts.map(workout => workout === targetWorkout ? newWorkout : workout))
   }
 
   const toggleDone = () => {
@@ -54,6 +62,7 @@ function App() {
             {workout.done && 
              <p>✅</p>}
             <button onClick={e=>deleteWorkout(workout)}>Delete</button>
+            <button onClick={e=>randomiseWorkout(workout)}>Randomise!</button>
           </li>
         ))}
       </ul>
